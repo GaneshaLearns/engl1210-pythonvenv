@@ -1,0 +1,6 @@
+{
+  "name": "Python Virtual Environment Guide",
+  "description": "An interactive, highly polished guide and Google Sites companion for setting up Python virtual environments on Windows, macOS, and Linux.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
