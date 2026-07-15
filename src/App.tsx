@@ -83,7 +83,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* Controls: OS Toggle & Styling */}
+          {/* Controls: OS Toggle */}
           <div className="hidden md:flex items-center space-x-6">
             {/* OS Selector */}
             <div className="flex items-center space-x-2 bg-slate-900/50 p-1 rounded-lg border border-slate-800">
@@ -119,36 +119,11 @@ export default function App() {
                 Linux
               </button>
             </div>
-
-            {/* Banner Theme Config */}
-            <div className="flex items-center space-x-2 bg-slate-900/50 p-1.5 rounded-lg border border-slate-800">
-              <span className="text-[10px] uppercase tracking-wider text-slate-500 px-1 font-bold">Theme:</span>
-              <div className="flex space-x-1.5">
-                {['slate', 'royal', 'teal', 'sunset'].map((style) => (
-                  <button
-                    key={style}
-                    onClick={() => setHeaderStyle(style)}
-                    className={`w-4.5 h-4.5 rounded-full border-2 transition-transform cursor-pointer hover:scale-110 ${
-                      headerStyle === style ? 'border-white scale-105' : 'border-transparent'
-                    } ${
-                      style === 'slate'
-                        ? 'bg-slate-700'
-                        : style === 'royal'
-                        ? 'bg-blue-700'
-                        : style === 'teal'
-                        ? 'bg-teal-600'
-                        : 'bg-gradient-to-r from-amber-500 to-rose-600'
-                    }`}
-                    title={`Set theme background to ${style}`}
-                  />
-                ))}
-              </div>
-            </div>
           </div>
         </div>
       </header>
 
-      {/* MOBILE OS/THEME SELECTOR EXPANDED BANNER */}
+      {/* MOBILE OS SELECTOR EXPANDED BANNER */}
       <div className="md:hidden bg-slate-950 px-4 py-2 flex flex-col space-y-2 border-b border-slate-800 text-white">
         <div className="flex items-center justify-between">
           <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Target OS:</span>
@@ -163,28 +138,6 @@ export default function App() {
               >
                 {sys}
               </button>
-            ))}
-          </div>
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Sites Theme Accent:</span>
-          <div className="flex space-x-1.5">
-            {['slate', 'royal', 'teal', 'sunset'].map((style) => (
-              <button
-                key={style}
-                onClick={() => setHeaderStyle(style)}
-                className={`w-4 h-4 rounded-full border ${
-                  headerStyle === style ? 'border-white scale-110' : 'border-transparent'
-                } ${
-                  style === 'slate'
-                    ? 'bg-slate-700'
-                    : style === 'royal'
-                    ? 'bg-blue-700'
-                    : style === 'teal'
-                    ? 'bg-teal-600'
-                    : 'bg-gradient-to-r from-amber-500 to-rose-600'
-                }`}
-              />
             ))}
           </div>
         </div>
