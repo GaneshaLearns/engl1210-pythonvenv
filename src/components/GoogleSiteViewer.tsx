@@ -33,13 +33,33 @@ export default function GoogleSiteViewer({
   };
 
   // Helper to dynamically translate code blocks or paths depending on selected OS
-  const getOSSpecificCode = (rawCode: string): string => {
+  const getOSSpecificCode = (rawCode: string, title?: string): string => {
+    // If the title explicitly targets another operating system or shell, DO NOT translate it!
+    if (title) {
+      const lowerTitle = title.toLowerCase();
+      const isWindowsTarget = lowerTitle.includes('windows') || lowerTitle.includes('powershell') || lowerTitle.includes('command prompt') || lowerTitle.includes('cmd');
+      const isUnixTarget = lowerTitle.includes('macos') || lowerTitle.includes('linux') || lowerTitle.includes('bash') || lowerTitle.includes('zsh') || lowerTitle.includes('terminal');
+      
+      if (os === 'windows' && isUnixTarget) {
+        return rawCode; // Keep as-is (e.g., source venv/bin/activate)
+      }
+      if (os !== 'windows' && isWindowsTarget) {
+        return rawCode; // Keep as-is (e.g., venv\Scripts\activate)
+      }
+    }
+
     if (os === 'windows') {
+      if (rawCode.includes('# or on') || rawCode.includes('Example:')) {
+        return rawCode;
+      }
       return rawCode
         .replace(/python3/g, 'python')
         .replace(/source venv\/bin\/activate/g, 'venv\\Scripts\\activate')
         .replace(/which python/g, 'where python');
     } else {
+      if (rawCode.includes('# or on') || rawCode.includes('Example:')) {
+        return rawCode;
+      }
       return rawCode
         .replace(/venv\\Scripts\\activate/g, 'source venv/bin/activate')
         .replace(/\\venv\\Scripts\\Activate\.ps1/g, 'source venv/bin/activate')
@@ -162,10 +182,10 @@ export default function GoogleSiteViewer({
             {sec.title && <span className="block text-[10px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">{sec.title}</span>}
             <div className="relative group bg-[#090d16] rounded-xl p-4 border border-slate-900 overflow-x-auto shadow-2xl">
               <pre className="text-blue-400 leading-relaxed font-mono">
-                <code>{getOSSpecificCode(sec.content as string)}</code>
+                <code>{getOSSpecificCode(sec.content as string, sec.title)}</code>
               </pre>
               <button
-                onClick={() => navigator.clipboard.writeText(getOSSpecificCode(sec.content as string))}
+                onClick={() => navigator.clipboard.writeText(getOSSpecificCode(sec.content as string, sec.title))}
                 className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 bg-slate-900 hover:bg-slate-800 text-slate-400 p-1.5 rounded-lg border border-slate-800 transition-all cursor-pointer text-[10px] uppercase font-bold tracking-wide flex items-center space-x-1"
                 title="Copy code snippet"
               >
