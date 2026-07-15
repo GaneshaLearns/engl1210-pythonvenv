@@ -13,7 +13,6 @@ export const PAGES: PageContent[] = [
         content: [
           'Comprehensive Setup Guide',
           'Covers Windows, macOS, and Linux Platforms',
-          'Interactive CLI Sandboxes'
         ]
       },
       {
