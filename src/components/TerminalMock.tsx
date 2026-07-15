@@ -9,6 +9,7 @@ interface TerminalMockProps {
   output: string;
   explanation?: string;
   onRunComplete?: () => void;
+  onShellChange?: (shell: 'cmd' | 'powershell' | 'macos') => void;
 }
 
 export default function TerminalMock({
@@ -17,7 +18,8 @@ export default function TerminalMock({
   command,
   output,
   explanation,
-  onRunComplete
+  onRunComplete,
+  onShellChange
 }: TerminalMockProps) {
   const [selectedStyle, setSelectedStyle] = useState<'cmd' | 'powershell' | 'macos'>(
     os === 'windows' ? 'cmd' : 'macos'
@@ -37,6 +39,13 @@ export default function TerminalMock({
       setSelectedStyle('macos');
     }
   }, [os]);
+
+  // Notify parent component of shell style changes to make figure captions dynamic
+  useEffect(() => {
+    if (onShellChange) {
+      onShellChange(selectedStyle);
+    }
+  }, [selectedStyle, onShellChange]);
 
   // Reset output when step or style changes
   useEffect(() => {

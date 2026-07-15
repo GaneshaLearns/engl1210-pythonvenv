@@ -228,9 +228,6 @@ export default function GoogleSiteViewer({
 
         return (
           <div key={index} className="my-6">
-            <span className="block text-[10px] font-bold text-slate-500 mb-2 uppercase tracking-widest">
-              Simulation Figure {sec.figureId} • Live CLI Sandbox
-            </span>
             <TerminalMock
               os={os}
               stepId={sec.figureId}
