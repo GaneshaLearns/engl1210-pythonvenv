@@ -5,7 +5,6 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
-    base: '/engl1210-pythonvenv/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {

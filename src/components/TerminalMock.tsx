@@ -51,9 +51,66 @@ export default function TerminalMock({
     }
   }, [terminalOutput]);
 
+  // Helper to dynamically translate commands and outputs based on selectedStyle
+  const getTranslatedCommandAndOutput = () => {
+    let displayCommand = command;
+    let displayOutput = output;
+    let displayExplanation = explanation || '';
+
+    if (selectedStyle === 'powershell') {
+      if (stepId === 4) {
+        displayCommand = '& .\\venv\\Scripts\\Activate.ps1';
+        displayExplanation = 'Activates the PowerShell script. The preceding ampersand (&) is the PowerShell call operator used to safely execute the script path.';
+      } else if (stepId === 6) {
+        displayCommand = 'where.exe python';
+        displayExplanation = 'Queries Windows for python executables. Using where.exe specifies the direct program to prevent alias conflicts in PowerShell.';
+      } else if (stepId === 1) {
+        displayCommand = 'python --version';
+      } else if (stepId === 2) {
+        displayCommand = 'cd Documents\\MyProject';
+      } else if (stepId === 3) {
+        displayCommand = 'python -m venv venv';
+      }
+    } else if (selectedStyle === 'cmd') {
+      if (stepId === 4) {
+        displayCommand = 'venv\\Scripts\\activate';
+        displayExplanation = 'Executes the activate.bat batch file inside Windows Command Prompt to isolate the shell session.';
+      } else if (stepId === 6) {
+        displayCommand = 'where python';
+      } else if (stepId === 1) {
+        displayCommand = 'python --version';
+      } else if (stepId === 2) {
+        displayCommand = 'cd Documents\\MyProject';
+      } else if (stepId === 3) {
+        displayCommand = 'python -m venv venv';
+      }
+    } else if (selectedStyle === 'macos') {
+      // macOS/Linux style
+      if (stepId === 1) {
+        displayCommand = 'python3 --version';
+        displayOutput = 'Python 3.11.2';
+      } else if (stepId === 2) {
+        displayCommand = 'cd Documents/MyProject';
+      } else if (stepId === 3) {
+        displayCommand = 'python3 -m venv venv';
+      } else if (stepId === 4) {
+        displayCommand = 'source venv/bin/activate';
+        displayExplanation = 'Loads the virtual environment activation script into the current bash/zsh active terminal shell.';
+      } else if (stepId === 6) {
+        displayCommand = 'which python';
+        displayOutput = '/Users/john/Documents/MyProject/venv/bin/python';
+      } else {
+        displayCommand = command.replace(/\\/g, '/');
+      }
+    }
+
+    return { displayCommand, displayOutput, displayExplanation };
+  };
+
   const handleCopy = async () => {
+    const { displayCommand } = getTranslatedCommandAndOutput();
     try {
-      await navigator.clipboard.writeText(command);
+      await navigator.clipboard.writeText(displayCommand);
       setIsCopied(true);
       setTimeout(() => setIsCopied(false), 2000);
     } catch (err) {
@@ -66,13 +123,15 @@ export default function TerminalMock({
     setIsTyping(true);
     setTerminalOutput([]);
 
+    const { displayCommand, displayOutput } = getTranslatedCommandAndOutput();
+
     let typedCommand = '';
     let charIdx = 0;
     
     // Typing speed
     const typeInterval = setInterval(() => {
-      if (charIdx < command.length) {
-        typedCommand += command.charAt(charIdx);
+      if (charIdx < displayCommand.length) {
+        typedCommand += displayCommand.charAt(charIdx);
         setTerminalOutput([typedCommand]);
         charIdx++;
       } else {
@@ -80,8 +139,8 @@ export default function TerminalMock({
         
         // Brief pause, then show output
         setTimeout(() => {
-          if (output) {
-            const outputLines = output.split('\n');
+          if (displayOutput) {
+            const outputLines = displayOutput.split('\n');
             setTerminalOutput(prev => [...prev, ...outputLines]);
           }
           setIsTyping(false);
@@ -116,6 +175,8 @@ export default function TerminalMock({
   // Step 7: Input has active env, command "deactivate" is run, output removes active env.
   const isEnvActiveBeforeInput = stepId >= 5 || stepId === 7;
   const isEnvActiveAfterOutput = stepId >= 4 && stepId < 7;
+
+  const { displayExplanation } = getTranslatedCommandAndOutput();
 
   return (
     <div className="w-full rounded-xl overflow-hidden border border-slate-900 shadow-2xl bg-slate-950 flex flex-col transition-all duration-300">
@@ -255,7 +316,7 @@ export default function TerminalMock({
       <div className="bg-slate-950 px-4 py-3 flex items-center justify-between border-t border-slate-900 rounded-b-xl gap-2">
         <div className="flex-1 mr-4">
           <p className="text-[11px] text-slate-500 italic">
-            {explanation || 'Run this command inside your terminal/command line tool to execute this step.'}
+            {displayExplanation || 'Run this command inside your terminal/command line tool to execute this step.'}
           </p>
         </div>
         <div className="flex items-center space-x-2 shrink-0">

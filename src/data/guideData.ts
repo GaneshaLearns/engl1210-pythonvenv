@@ -194,7 +194,7 @@ export const PAGES: PageContent[] = [
       {
         type: 'code',
         title: 'Windows (PowerShell)',
-        content: '.\\venv\\Scripts\\Activate.ps1'
+        content: '& .\\venv\\Scripts\\Activate.ps1'
       },
       {
         type: 'code',
@@ -343,7 +343,7 @@ export const PAGES: PageContent[] = [
       {
         type: 'paragraph',
         title: 'Problem: Activation Is Denied in PowerShell (Windows)',
-        content: 'When attempting to run "venv\\Scripts\\Activate.ps1" in PowerShell, you receive an error: "File cannot be loaded because running scripts is disabled on this system."'
+        content: 'When attempting to run "& .\\venv\\Scripts\\Activate.ps1" in PowerShell, you receive an error: "File cannot be loaded because running scripts is disabled on this system."'
       },
       {
         type: 'code',
