@@ -387,6 +387,22 @@ export const PAGES: PageContent[] = [
       {
         type: 'paragraph',
         content: 'If the folder "venv" is missing, re-run Phase 1 (python -m venv venv) to build the folder.'
+      },
+      {
+        type: 'paragraph',
+        title: 'Problem: Paths with Spaces in Folder Names',
+        content: 'If your project is saved in a directory path that contains spaces (e.g., "C:\\My Documents\\MyProject"), command lines or shell activation without proper quoting will fail, returning errors like "The system cannot find the path specified" or path resolution syntax issues.'
+      },
+      {
+        type: 'callout',
+        title: 'Solution (Quote Your Paths)',
+        content: 'Always wrap directory paths containing spaces in quotes. For Windows CMD or PowerShell, use double quotes ("). For macOS and Linux (Bash or Zsh), use single quotes (\') or double quotes (").',
+        calloutType: 'info'
+      },
+      {
+        type: 'code',
+        title: 'Examples',
+        content: '# Windows (CMD / PowerShell):\n"C:\\My Documents\\MyProject\\venv\\Scripts\\activate"\n\n# macOS / Linux (Terminal):\nsource \'/Users/john/My Documents/MyProject/venv/bin/activate\''
       }
     ]
   },
